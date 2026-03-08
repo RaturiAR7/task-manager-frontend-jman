@@ -1,9 +1,21 @@
+"use client";
 
+import { useParams } from "next/navigation";
 
-const TaskDetails = () => {
+export default function TaskDetailsPage() {
+
+  const params = useParams();
+  const taskId = params.taskId;
+
   return (
-    <div>TaskDetails</div>
-  )
-}
+    <div className="p-6">
 
-export default TaskDetails
+      <h1 className="text-2xl font-bold mb-4">
+        Task Details
+      </h1>
+
+      <p>Task ID: {taskId}</p>
+
+    </div>
+  );
+}

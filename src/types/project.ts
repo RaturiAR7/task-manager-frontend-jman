@@ -1,8 +1,11 @@
-type Project = {
-    id : string;
-    title : string;
-    descriuption : string;
-    status : string;
-}
+export interface Project {
 
-export default Project
+  id: string;
+  name: string;
+  description: string;
+
+  deadline?: string;
+
+  createdAt: string;
+
+}

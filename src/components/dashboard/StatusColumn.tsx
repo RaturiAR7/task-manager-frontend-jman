@@ -1,27 +1,39 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
-import ProjectCard from "./ProjectCard";
-import Project from "@/src/types/project";
+import TaskCard from "./TaskCard";
 
-type Props = {
-    id : string;
-    title : string;
-    projects : Project[];
+interface Task {
+  id: string;
+  title: string;
+  status: string;
 }
 
-const StatusColumn = ({id, title, projects} : Props) => {
-    const {setNodeRef} = useDroppable({id});
+interface Props {
+  id: string;
+  title: string;
+  tasks: Task[];
+}
+
+export default function StatusColumn({ id, title, tasks }: Props) {
+
+  const { setNodeRef, isOver } = useDroppable({
+    id: id,
+  });
+
   return (
-    <div ref={setNodeRef} className="flex gap-5">
-        <h2 className="font-bold mb-4">{title}</h2>
-        {
-            projects.map(project => (
-                <ProjectCard key={project.id} project={project}/>
-            ))
-        }
-    </div>
-  )
-}
+    <div
+      ref={setNodeRef}
+      className={`p-4 rounded min-h-[350px] transition ${
+        isOver ? "bg-blue-100" : "bg-gray-100"
+      }`}
+    >
+      <h2 className="font-semibold mb-4">{title}</h2>
 
-export default StatusColumn
+      {tasks.map((task) => (
+        <TaskCard key={task.id} task={task} />
+      ))}
+
+    </div>
+  );
+}
