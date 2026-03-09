@@ -1,13 +1,16 @@
 "use client";
 
-import DashboardBoard from "@/src/components/dashboard/DashboardBoard";
+import ProjectBoard from "@/src/components/dashboard/ProjectBoard";
 import CreateProjectModal from "../../components/dashboard/createProjectModal";
 import { useEffect, useState } from "react";
 import { projectApi } from "@/src/services/projectApi";
 import { Project } from "@/src/types/project";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
+
+  console.log("Inside the dashboard")
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [showModal, setShowModal] = useState(false);
@@ -23,59 +26,71 @@ export default function DashboardPage() {
         console.error("Failed to fetch projects", error);
       }
     }
+    console.log("hiiii")
 
     fetchProjects();
   }, []);
 
-  async function createProject(project: { name: string; description: string }) {
 
-    try {
-      const newProject = await projectApi.createProject(project);
+  console.log("All projects", projects)
 
-      setProjects((prev) => [...prev, newProject]);
+  async function createProject(project: { name: string; description: string; memberIds: string[] }) {
+    const newProject = await projectApi.createProject(project);
+    console.log("Created project:", newProject);
 
-      setShowModal(false);
-
-    } catch (error) {
-      console.error("Failed to create project", error);
+    if (project.memberIds.length > 0) {
+      await Promise.allSettled(
+        project.memberIds.map((userId) =>
+          projectApi.addMember(newProject.id, userId).catch((err) =>
+            console.error(`Failed to add member ${userId}:`, err)
+          )
+        )
+      );
     }
+
+    setProjects((prev) => [...prev, newProject]);
+    setShowModal(false);
   }
 
   return (
-    <div className="p-6">
-
-      <h1 className="text-2xl font-bold mb-6">
-        Dashboard
-      </h1>
-
-      <div className="flex gap-4 mb-6">
-
-        <button
-          onClick={() => setShowModal(true)}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Create Project
-        </button>
-
-        <button
-          onClick={() => router.push("/projects")}
-          className="bg-gray-800 text-white px-4 py-2 rounded"
-        >
-          View All Projects
-        </button>
-
+    <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] p-6 relative overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#A1BC98] rounded-full opacity-20 blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#778873] rounded-full opacity-20 blur-3xl"></div>
       </div>
 
-      {/* Kanban Board */}
-      <DashboardBoard />
+      <div className="relative z-10">
+        <h1 className="text-3xl font-bold mb-6 text-[#778873]">
+          Dashboard
+        </h1>
 
-      {/* Modal */}
-      {showModal && (
-        <CreateProjectModal
-          onCreate={createProject}
-          onClose={() => setShowModal(false)}
-        />
-      )}
+        <div className="flex gap-4 mb-6">
+
+          <Button
+            onClick={() => setShowModal(true)}
+            className="bg-[#778873] hover:bg-[#A1BC98] text-[#F1F3E0]"
+          >
+            Create Project
+          </Button>
+
+          <Button
+            onClick={() => router.push("/projects")}
+            variant="outline"
+            className="border-[#D2DCB6] text-[#778873] hover:bg-[#D2DCB6]/50"
+          >
+            View All Projects
+          </Button>
+
+        </div>
+        <ProjectBoard projects={projects} setProjects={setProjects} />
+
+        {showModal && (
+          <CreateProjectModal
+            onCreate={createProject}
+            onClose={() => setShowModal(false)}
+          />
+        )}
+      </div>
 
     </div>
   );
