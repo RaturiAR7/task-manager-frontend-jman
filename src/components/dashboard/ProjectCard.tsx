@@ -1,16 +1,20 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import { Project } from "@/src/types/project";
-const router = useRouter();
 
-interface Props {
-  project: Project;
-}
-
-export default function ProjectCard({ project }: Props) {
-
+export default function ProjectCard({ project }: { project: Project }) {
   const router = useRouter();
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: project.id,
+  });
+
+  const style = {
+    transform: CSS.Translate.toString(transform),
+  };
 
   function openProject() {
     router.push(`/projects/${project.id}`);
@@ -18,15 +22,24 @@ export default function ProjectCard({ project }: Props) {
 
   return (
     <div
-      key={project.id}
-      onClick={() => router.push(`/projects/${project.id}`)}
-      className="bg-white p-4 rounded shadow hover:shadow-lg cursor-pointer"
+      ref={setNodeRef}
+      style={style}
+      {...listeners}
+      {...attributes}
+      onClick={openProject}
+      className="bg-white p-4 rounded-xl shadow-sm border border-[#D2DCB6]/50 mb-3 cursor-pointer hover:shadow-md transition-shadow group flex flex-col gap-2"
     >
-      <h2 className="text-lg font-semibold">{project.name}</h2>
-
-      <p className="text-gray-500 text-sm mt-2">
-        {project.description || "No description"}
-      </p>
+      <div className="font-medium text-[#778873]">{project.name}</div>
+      {project.description && (
+        <div className="text-sm text-[#778873]/70 line-clamp-2">
+          {project.description}
+        </div>
+      )}
+      {project.deadline && (
+        <div className="mt-2 text-xs font-medium px-2 py-1 bg-[#F1F3E0] text-[#778873] rounded-full self-start">
+          Deadline: {project.deadline}
+        </div>
+      )}
     </div>
   );
 }
