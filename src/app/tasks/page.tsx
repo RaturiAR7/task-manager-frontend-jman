@@ -1,8 +1,10 @@
-
+import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 const Tasks = () => {
   return (
-    <div>Tasks</div>
+    <ProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
+      <div>Tasks</div>
+    </ProtectedRoute>
   )
 }
 

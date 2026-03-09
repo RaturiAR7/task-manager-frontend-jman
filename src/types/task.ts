@@ -1,4 +1,4 @@
-export type TaskStatus = "todo" | "in-progress" | "done";
+export type TaskStatus = "TODO" | "IN_PROGRESS" | "DONE";
 
 export interface Task {
   id: string;
@@ -6,5 +6,8 @@ export interface Task {
   title: string;
   description?: string;
   status: TaskStatus;
-  assigneeId?: number;
+  assignedTo?: string;   // userId (string), matches backend `assignedTo`
+  createdBy?: string;
+  priority?: string;
+  createdAt?: string;
 }
