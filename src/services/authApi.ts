@@ -1,40 +1,41 @@
-import { users } from "../mocks/users"
 import { User } from "../types/user"
 import { apiClient } from "./apiClient"
 
-const USE_MOCK = true
-
 interface LoginResponse {
   token: string
-  user: User
+}
+
+interface RegisterResponse {
+  message?: string
 }
 
 export const authApi = {
 
+  async register(data: any): Promise<RegisterResponse> {
+    return apiClient<RegisterResponse>("/user/register", {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
+  },
+
   async login(email: string, password: string): Promise<LoginResponse> {
-
-    if (USE_MOCK) {
-
-      const user = users.find(
-        u => u.email === email && u.password === password
-      )
-
-      if (!user) {
-        throw new Error("Invalid credentials")
-      }
-
-      const { password: _, ...userData } = user
-
-      return {
-        token: "mock-token",
-        user: userData
-      }
-    }
-
-    return apiClient<LoginResponse>("/auth/login", {
+    return apiClient<LoginResponse>("/user/login", {
       method: "POST",
       body: JSON.stringify({ email, password })
     })
-  }
+  },
 
+  // Returns all users with safe fields only — accessible to any authenticated user
+  async getAllUsers(): Promise<User[]> {
+    return apiClient<User[]>("/user/users", {
+      method: "GET"
+    })
+  },
+
+  // Returns the current logged-in user's profile from JWT
+  async getMe(): Promise<User> {
+    return apiClient<User>("/user/me", {
+      method: "GET"
+    })
+  }
 }
