@@ -23,6 +23,7 @@ export default function DashboardPage() {
 
         const user = await authApi.getMe();
         console.log("Current user:", user);
+        setUser(user);
         const data = await projectApi.getProjects();
         console.log("Fetched projects:", data);
         setProjects(data);
