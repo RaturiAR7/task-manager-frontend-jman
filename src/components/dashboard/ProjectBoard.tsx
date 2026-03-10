@@ -93,9 +93,9 @@ export default function ProjectBoard({ projects, setProjects }: ProjectBoardProp
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <DndContext onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mx-30 mt-20">
           {columns.map((column) => (
             <ProjectStatusColumn
               key={column.id}

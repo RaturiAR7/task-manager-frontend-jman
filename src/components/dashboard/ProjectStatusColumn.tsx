@@ -20,7 +20,7 @@ export default function ProjectStatusColumn({ id, title, projects, disableDrop }
   return (
     <div
       ref={setNodeRef}
-      className={`p-4 rounded min-h-[350px] transition ${
+      className={`p-4 rounded min-h-[550px] transition min-w-[100px] ${
         disableDrop
           ? "bg-white/50 backdrop-blur-sm border border-[#D2DCB6] opacity-80"
           : isOver
