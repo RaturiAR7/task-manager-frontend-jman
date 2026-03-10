@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { projectApi } from "@/src/services/projectApi";
 import { Project } from "@/src/types/project";
 import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import ProtectedRoute from "@/src/components/auth/ProtectedRoute";
 
 export default function DashboardPage() {
