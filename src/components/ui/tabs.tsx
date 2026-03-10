@@ -1,5 +1,6 @@
 // components/ui/tabs.tsx
 import * as React from 'react'
+import { cn } from "@/lib/utils"
 
 interface TabsContextValue {
   selectedTab?: string
@@ -47,7 +48,10 @@ const TabsList = React.forwardRef<HTMLDivElement, TabsListProps>(
   ({ className, ...props }, ref) => (
     <div
       ref={ref}
-      className={`inline-flex h-10 items-center justify-center rounded-md bg-[#D2DCB6] p-1 text-[#778873] ${className || ''}`}
+      className={cn(
+        "inline-flex h-10 items-center justify-center rounded-xl bg-white/5 border border-white/10 p-1 text-white/50",
+        className
+      )}
       {...props}
     />
   )
@@ -70,11 +74,13 @@ const TabsTrigger = React.forwardRef<HTMLButtonElement, TabsTriggerProps>(
         role="tab"
         aria-selected={isSelected}
         data-state={isSelected ? 'active' : 'inactive'}
-        className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${
-          isSelected 
-            ? 'bg-[#F1F3E0] text-[#778873] shadow-sm' 
-            : 'text-[#778873] hover:bg-[#A1BC98] hover:text-[#F1F3E0]'
-        } ${className || ''}`}
+        className={cn(
+          "inline-flex items-center justify-center whitespace-nowrap rounded-lg px-4 py-1.5 text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
+          isSelected
+            ? "bg-blue-500 text-white shadow-md shadow-blue-500/30"
+            : "text-white/50 hover:text-white hover:bg-white/8",
+          className
+        )}
         onClick={() => context?.onValueChange?.(value)}
         {...props}
       >
@@ -99,7 +105,10 @@ const TabsContent = React.forwardRef<HTMLDivElement, TabsContentProps>(
         ref={ref}
         role="tabpanel"
         data-state={context?.selectedTab === value ? 'active' : 'inactive'}
-        className={`mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${className || ''}`}
+        className={cn(
+          "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          className
+        )}
         {...props}
       >
         {children}

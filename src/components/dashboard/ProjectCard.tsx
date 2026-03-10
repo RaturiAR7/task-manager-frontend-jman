@@ -5,6 +5,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { Project } from "@/src/types/project";
 import { useAuth } from "@/src/context/authContext";
+import { CalendarDays } from "lucide-react";
 
 export default function ProjectCard({ project }: { project: Project }) {
   const router = useRouter();
@@ -32,17 +33,22 @@ export default function ProjectCard({ project }: { project: Project }) {
       {...listeners}
       {...attributes}
       onClick={openProject}
-      className="bg-white p-4 rounded-xl shadow-sm border border-[#D2DCB6]/50 mb-3 cursor-pointer hover:shadow-md transition-shadow group flex flex-col gap-2"
+      className={`bg-white/5 border border-white/8 p-4 rounded-xl mb-3 flex flex-col gap-2 transition-all duration-200 group
+        hover:bg-white/8 hover:border-blue-500/30 hover:shadow-lg hover:shadow-blue-500/10
+        ${canDrag ? "cursor-grab active:cursor-grabbing" : "cursor-pointer"}`}
     >
-      <div className="font-medium text-[#778873]">{project.name}</div>
+      <div className="font-semibold text-white text-sm group-hover:text-blue-200 transition-colors duration-200">
+        {project.name}
+      </div>
       {project.description && (
-        <div className="text-sm text-[#778873]/70 line-clamp-2">
+        <div className="text-xs text-white/40 line-clamp-2 leading-relaxed">
           {project.description}
         </div>
       )}
       {project.deadline && (
-        <div className="mt-2 text-xs font-medium px-2 py-1 bg-[#F1F3E0] text-[#778873] rounded-full self-start">
-          Deadline: {project.deadline}
+        <div className="flex items-center gap-1.5 mt-1 text-xs text-white/30">
+          <CalendarDays size={11} />
+          <span>{project.deadline}</span>
         </div>
       )}
     </div>
