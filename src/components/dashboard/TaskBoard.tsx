@@ -71,7 +71,6 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
         }));
 
         setMembers(formattedMembers);
-
       } catch (err) {
         console.error("Failed to load task board data:", err);
       }
@@ -91,19 +90,19 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
       return; // Employees cannot move tasks to TODO.
     }
 
-    const task = tasks.find(t => t.id === taskId);
+    const task = tasks.find((t) => t.id === taskId);
     if (!task || task.status === newStatus) return;
 
-    setTasks(prev =>
-      prev.map(t => (t.id === taskId ? { ...t, status: newStatus } : t))
+    setTasks((prev) =>
+      prev.map((t) => (t.id === taskId ? { ...t, status: newStatus } : t)),
     );
 
     try {
       await taskApi.updateTask(taskId, { status: newStatus });
     } catch (err) {
       console.error("Failed to update task status:", err);
-      setTasks(prev =>
-        prev.map(t => (t.id === taskId ? { ...t, status: task.status } : t))
+      setTasks((prev) =>
+        prev.map((t) => (t.id === taskId ? { ...t, status: task.status } : t)),
       );
     }
   }
@@ -124,7 +123,7 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
         userId: newTask.userId ? newTask.userId : undefined,
       });
 
-      setTasks(prev => [...prev, createdTask]);
+      setTasks((prev) => [...prev, createdTask]);
       setIsDialogOpen(false);
       setNewTask({ title: "", description: "", userId: "" });
     } catch (err) {
@@ -153,80 +152,83 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
                 + Create Task
               </Button>
             </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Create New Task</DialogTitle>
-              <DialogDescription>
-                Add a new task to this project and optionally assign it to a member.
-              </DialogDescription>
-            </DialogHeader>
+            <DialogContent className="sm:max-w-[500px]">
+              <DialogHeader>
+                <DialogTitle>Create New Task</DialogTitle>
+                <DialogDescription>
+                  Add a new task to this project and optionally assign it to a
+                  member.
+                </DialogDescription>
+              </DialogHeader>
 
-            {createError && (
-              <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
-                {createError}
+              {createError && (
+                <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+                  {createError}
+                </div>
+              )}
+
+              <div className="grid gap-4 py-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="task-title">Title *</Label>
+                  <Input
+                    id="task-title"
+                    value={newTask.title}
+                    onChange={(e) => {
+                      setNewTask({ ...newTask, title: e.target.value });
+                      setCreateError("");
+                    }}
+                    placeholder="Task title"
+                    disabled={creating}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="task-description">
+                    Description (optional)
+                  </Label>
+                  <Input
+                    id="task-description"
+                    value={newTask.description}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, description: e.target.value })
+                    }
+                    placeholder="Task description"
+                    disabled={creating}
+                  />
+                </div>
+
+                <div className="grid gap-2">
+                  <Label htmlFor="task-assignee">Assign to (optional)</Label>
+                  <select
+                    id="task-assignee"
+                    value={newTask.userId}
+                    onChange={(e) =>
+                      setNewTask({ ...newTask, userId: e.target.value })
+                    }
+                    disabled={creating}
+                    className="border border-input bg-background rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">Unassigned</option>
+
+                    {members?.map((member) => (
+                      <option key={member.id} value={member.id}>
+                        {member.name}
+                        {member.email ? ` (${member.email})` : ""}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
-            )}
 
-            <div className="grid gap-4 py-4">
-              <div className="grid gap-2">
-                <Label htmlFor="task-title">Title *</Label>
-                <Input
-                  id="task-title"
-                  value={newTask.title}
-                  onChange={(e) => {
-                    setNewTask({ ...newTask, title: e.target.value });
-                    setCreateError("");
-                  }}
-                  placeholder="Task title"
+              <DialogFooter>
+                <Button
+                  onClick={handleCreateTask}
                   disabled={creating}
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="task-description">Description (optional)</Label>
-                <Input
-                  id="task-description"
-                  value={newTask.description}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, description: e.target.value })
-                  }
-                  placeholder="Task description"
-                  disabled={creating}
-                />
-              </div>
-
-              <div className="grid gap-2">
-                <Label htmlFor="task-assignee">Assign to (optional)</Label>
-                <select
-                  id="task-assignee"
-                  value={newTask.userId}
-                  onChange={(e) =>
-                    setNewTask({ ...newTask, userId: e.target.value })
-                  }
-                  disabled={creating}
-                  className="border border-input bg-background rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="bg-[#778873] hover:bg-[#A1BC98] text-white disabled:opacity-50"
                 >
-                  <option value="">Unassigned</option>
-
-                  {members?.map((member) => (
-                    <option key={member.id} value={member.id}>
-                      {member.name}
-                      {member.email ? ` (${member.email})` : ""}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <DialogFooter>
-              <Button
-                onClick={handleCreateTask}
-                disabled={creating}
-                className="bg-[#778873] hover:bg-[#A1BC98] text-white disabled:opacity-50"
-              >
-                {creating ? "Creating..." : "Save Task"}
-              </Button>
-            </DialogFooter>
+                  {creating ? "Creating..." : "Save Task"}
+                </Button>
+              </DialogFooter>
             </DialogContent>
           </Dialog>
         </div>

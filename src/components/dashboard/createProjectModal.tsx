@@ -49,7 +49,7 @@ export default function CreateProjectModal({ onCreate, onClose }: Props) {
   const filteredUsers = users.filter(
     (u) =>
       u.name.toLowerCase().includes(userSearch.toLowerCase()) ||
-      u.email.toLowerCase().includes(userSearch.toLowerCase())
+      u.email.toLowerCase().includes(userSearch.toLowerCase()),
   );
 
   async function handleSubmit(e: React.FormEvent) {
@@ -83,7 +83,6 @@ export default function CreateProjectModal({ onCreate, onClose }: Props) {
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-xl w-[460px] shadow-xl max-h-[90vh] flex flex-col">
-
         <h2 className="text-xl font-semibold mb-4 text-[#778873]">
           Create Project
         </h2>
@@ -94,14 +93,19 @@ export default function CreateProjectModal({ onCreate, onClose }: Props) {
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-3 overflow-y-auto flex-1">
-
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-3 overflow-y-auto flex-1"
+        >
           {/* Name */}
           <input
             type="text"
             placeholder="Project name *"
             value={name}
-            onChange={(e) => { setName(e.target.value); setError(""); }}
+            onChange={(e) => {
+              setName(e.target.value);
+              setError("");
+            }}
             className="border border-[#D2DCB6] p-2 w-full rounded focus:outline-none focus:border-[#778873]"
             disabled={loading}
           />
@@ -218,7 +222,6 @@ export default function CreateProjectModal({ onCreate, onClose }: Props) {
               {loading ? "Creating…" : "Create"}
             </button>
           </div>
-
         </form>
       </div>
     </div>
