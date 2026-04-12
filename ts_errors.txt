@@ -1,0 +1,11 @@
+﻿src/app/auth/page.tsx(5,87): error TS2307: Cannot find module '@/src/components/ui/card' or its corresponding type declarations.
+src/app/auth/page.tsx(6,23): error TS2307: Cannot find module '@/src/components/ui/input' or its corresponding type declarations.
+src/app/auth/page.tsx(7,24): error TS2307: Cannot find module '@/src/components/ui/button' or its corresponding type declarations.
+src/app/auth/page.tsx(8,23): error TS2307: Cannot find module '@/src/components/ui/label' or its corresponding type declarations.
+src/app/auth/page.tsx(9,58): error TS2307: Cannot find module '@/src/components/ui/tabs' or its corresponding type declarations.
+src/app/auth/page.tsx(107,122): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/auth/page.tsx(111,123): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/auth/page.tsx(124,102): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/auth/page.tsx(129,125): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/auth/page.tsx(134,130): error TS7006: Parameter 'e' implicitly has an 'any' type.
+src/app/auth/page.tsx(139,142): error TS7006: Parameter 'e' implicitly has an 'any' type.
