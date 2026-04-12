@@ -1,3 +1,5 @@
+node_modules
+.env
 # Dependencies (node_modules is usually installed inside the container)
 node_modules
 # Next.js build outputs (always generated during `next build`)

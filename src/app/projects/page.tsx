@@ -31,45 +31,51 @@ export default function ProjectsPage() {
 
   }, []);
 
+  const statusClass = (status?: string) => {
+    if (status === "COMPLETED") return "status-completed";
+    if (status === "ONGOING") return "status-ongoing";
+    return "status-upcoming";
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] flex items-center justify-center p-6">
-        <div className="text-[#778873] text-xl font-semibold animate-pulse">Loading projects...</div>
+      <div className="page-bg min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+          <div className="text-white/50 text-sm">Loading projects...</div>
+        </div>
       </div>
     );
   }
 
   return (
     <ProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
-    <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] p-6 relative overflow-hidden">
-      
-      {/* Decorative Background Circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#A1BC98] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#778873] rounded-full opacity-20 blur-3xl"></div>
-      </div>
+    <div className="page-bg relative overflow-hidden">
+      {/* Glow orbs */}
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-700 rounded-full opacity-10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-700 rounded-full opacity-8 blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-
-        <h1 className="text-3xl font-bold mb-6 text-[#778873]">
-          Projects
-        </h1>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <p className="text-white/40 text-sm font-medium uppercase tracking-widest mb-1">All Projects</p>
+          <h1 className="text-3xl font-bold text-white mb-1">Projects</h1>
+          <div className="w-12 h-0.5 bg-pink-500 rounded-full" />
+        </div>
 
         {projects.length === 0 && (
-          <p className="text-[#778873] text-lg bg-white/50 p-6 rounded-xl border border-[#D2DCB6]">
+          <div className="glass-card p-8 text-center text-white/40">
             No projects available. Create one from the dashboard.
-          </p>
+          </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
           {[...projects]
             .sort((a, b) => {
-              // COMPLETED projects appear last
               const aCompleted = (a.status || "").toUpperCase() === "COMPLETED" ? 1 : 0;
               const bCompleted = (b.status || "").toUpperCase() === "COMPLETED" ? 1 : 0;
               if (aCompleted !== bCompleted) return aCompleted - bCompleted;
-              // Within the same group, sort oldest first
               return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
             })
             .map((project) => (
@@ -77,29 +83,25 @@ export default function ProjectsPage() {
             <div
               key={project.id}
               onClick={() => router.push(`/projects/${project.id}`)}
-              className="bg-white/90 backdrop-blur-sm border border-[#D2DCB6] p-6 rounded-xl shadow-sm hover:shadow-md hover:border-[#A1BC98] cursor-pointer transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full"
+              className="glass-card-hover p-6 flex flex-col h-full cursor-pointer"
             >
 
-              <div className="flex justify-between items-start mb-2">
-                <h2 className="text-xl font-bold text-[#778873] pr-2">
+              <div className="flex justify-between items-start mb-3">
+                <h2 className="text-lg font-bold text-white pr-2">
                   {project.name}
                 </h2>
                 {project.status && (
-                  <span className={`text-xs px-2 py-1 rounded-full whitespace-nowrap ${
-                    project.status === 'COMPLETED' ? 'bg-[#A1BC98]/30 text-[#4A5D23]' : 
-                    project.status === 'ONGOING' ? 'bg-[#D2DCB6] text-[#778873]' : 
-                    'bg-slate-100 text-slate-500'
-                  }`}>
+                  <span className={`text-xs px-2.5 py-1 rounded-full whitespace-nowrap font-medium ${statusClass(project.status)}`}>
                     {project.status.charAt(0).toUpperCase() + project.status.slice(1).toLowerCase()}
                   </span>
                 )}
               </div>
 
-              <p className="text-[#778873]/80 text-sm line-clamp-3 mb-4 flex-grow">
+              <p className="text-white/40 text-sm line-clamp-3 mb-4 flex-grow">
                 {project.description || "No description"}
               </p>
               
-              <div className="text-xs text-[#778873]/60 pt-4 border-t border-[#D2DCB6]/30">
+              <div className="text-xs text-white/25 pt-4 border-t border-white/8">
                 Created: {new Date(project.createdAt).toLocaleDateString()}
               </div>
 

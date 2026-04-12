@@ -9,7 +9,6 @@ import TaskBoard from "@/src/components/dashboard/TaskBoard";
 function formatDate(input?: unknown, withTime = true) {
   if (!input) return "—";
 
-  // Handle MongoDB Timestamp shape: { $date: '...' }
   const value =
     (typeof input === "object" && input && "$date" in (input as any))
       ? (input as any).$date
@@ -18,7 +17,6 @@ function formatDate(input?: unknown, withTime = true) {
   const d = new Date(value as any);
   if (isNaN(d.getTime())) return "—";
 
-  // Use the browser's locale; customize as needed
   const opts: Intl.DateTimeFormatOptions = withTime
     ? { year: "numeric", month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }
     : { year: "numeric", month: "short", day: "numeric" };
@@ -27,13 +25,11 @@ function formatDate(input?: unknown, withTime = true) {
 }
 
 export default function ProjectDetailsPage() {
-  // ✅ useParams has no generics in App Router
   const params = useParams();
 
-  // ✅ `useParams()` can return string | string[]
   const projectId = useMemo(() => {
     const id = (params as Record<string, string | string[] | undefined>)?.id;
-    return Array.isArray(id) ? id[0] : id; // normalize to string | undefined
+    return Array.isArray(id) ? id[0] : id;
   }, [params]);
 
   const [project, setProject] = useState<Project | null>(null);
@@ -53,9 +49,7 @@ export default function ProjectDetailsPage() {
       try {
         setLoading(true);
         setError(null);
-
         const data = await projectApi.getProject(projectId);
-
         if (!canceled) {
           if (data) {
             setProject(data);
@@ -72,19 +66,14 @@ export default function ProjectDetailsPage() {
     }
 
     fetchProject();
-    return () => {
-      canceled = true;
-    };
+    return () => { canceled = true; };
   }, [projectId]);
-
 
   useEffect(() => {
     if (project?.name) {
       const prevTitle = document.title;
       document.title = `${project.name} • Projects`;
-      return () => {
-        document.title = prevTitle;
-      };
+      return () => { document.title = prevTitle; };
     }
   }, [project?.name]);
 
@@ -94,33 +83,27 @@ export default function ProjectDetailsPage() {
     return formatDate(project.deadline, false);
   }, [project?.deadline]);
 
-  const statusPill = useMemo(() => {
-    const status = project?.status?.toUpperCase?.();
-    if (!status) return null;
-
-    const klass =
-      status === "COMPLETED"
-        ? "bg-[#A1BC98]/30 text-[#4A5D23]"
-        : status === "ONGOING"
-          ? "bg-[#D2DCB6] text-[#778873]"
-          : "bg-slate-100 text-slate-500";
-
-    const label = status.charAt(0) + status.slice(1).toLowerCase();
-    return <span className={`text-sm px-3 py-1 rounded-full whitespace-nowrap ${klass}`}>{label}</span>;
-  }, [project?.status]);
+  const statusClass = (status?: string) => {
+    if (status === "COMPLETED") return "status-completed";
+    if (status === "ONGOING") return "status-ongoing";
+    return "status-upcoming";
+  };
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] flex items-center justify-center p-6">
-        <div className="text-[#778873] text-xl font-semibold animate-pulse">Loading project...</div>
+      <div className="page-bg min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
+          <div className="text-white/50 text-sm">Loading project...</div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] flex items-center justify-center p-6">
-        <div className="bg-white/90 backdrop-blur-sm border border-[#F8D7DA] text-red-600 px-4 py-3 rounded-xl shadow-sm">
+      <div className="page-bg min-h-screen flex items-center justify-center p-6">
+        <div className="glass-card px-6 py-4 text-red-400 border-red-500/20">
           {error}
         </div>
       </div>
@@ -129,60 +112,59 @@ export default function ProjectDetailsPage() {
 
   if (!project) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] flex items-center justify-center p-6">
-        <div className="text-[#778873] text-xl font-semibold">No project data found.</div>
+      <div className="page-bg min-h-screen flex items-center justify-center p-6">
+        <div className="text-white/50 text-xl font-semibold">No project data found.</div>
       </div>
     );
   }
 
-  console.log("Project D ata: ", project);
+  console.log("Project Data: ", project);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] p-6 relative overflow-hidden">
-      {/* Decorative Background Circles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#A1BC98] rounded-full opacity-20 blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#778873] rounded-full opacity-20 blur-3xl" />
-      </div>
+    <div className="page-bg relative overflow-hidden">
+      {/* Glow orbs */}
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-700 rounded-full opacity-10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-700 rounded-full opacity-8 blur-3xl pointer-events-none" />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-        <div className="bg-white/90 backdrop-blur-sm border border-[#D2DCB6] p-6 rounded-xl shadow-sm mb-6">
-          <div className="flex justify-between items-start mb-4">
-            <h1 className="text-3xl font-bold text-[#778873]">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Project Header Card */}
+        <div className="glass-card p-6 mb-8">
+          <div className="flex justify-between items-start mb-4 flex-wrap gap-3">
+            <h1 className="text-3xl font-bold text-white">
               {project.name ?? "Untitled Project"}
             </h1>
-            {statusPill}
+            {project.status && (
+              <span className={`text-sm px-3 py-1 rounded-full whitespace-nowrap font-medium ${statusClass(project.status)}`}>
+                {project.status.charAt(0) + project.status.slice(1).toLowerCase()}
+              </span>
+            )}
           </div>
 
-          <p className="text-[#778873]/80 mb-6 text-lg">
+          <p className="text-white/50 mb-6 text-base leading-relaxed">
             {project.description ?? "No description provided."}
           </p>
 
-          <div className="flex flex-wrap gap-8 text-[#778873]">
-
-            <p>
-              <strong>Created By:</strong>
-              {project.creator?.name}
-            </p>
-
-            <p>
-              <strong>Created:</strong> {formattedCreatedAt}
-            </p>
-            <p>
-              <strong>Deadline:</strong> {formattedDeadline}
-            </p>
-            {/* TODO: Replace 0/None with real counts/members once available */}
-            <p>
-              <strong>Completed Tasks:</strong> 0
-            </p>
-            <p>
-              <strong>Pending Tasks:</strong> 0
-            </p>
-            <p>
-              <strong>Assigned Members:</strong> None
-            </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {[
+              { label: "Created By", value: project.creator?.name || "—" },
+              { label: "Created", value: formattedCreatedAt },
+              { label: "Deadline", value: formattedDeadline },
+              { label: "Completed Tasks", value: "0" },
+              { label: "Pending Tasks", value: "0" },
+              { label: "Assigned Members", value: "None" },
+            ].map(({ label, value }) => (
+              <div key={label} className="bg-white/4 rounded-xl p-3 border border-white/6">
+                <div className="text-xs text-white/40 font-medium mb-1">{label}</div>
+                <div className="text-sm text-white font-semibold">{value}</div>
+              </div>
+            ))}
           </div>
         </div>
-        <h2 className="text-2xl font-bold mb-6 text-[#778873] mt-8">Project Tasks</h2>
+
+        {/* Task Board Section */}
+        <div className="mb-4">
+          <h2 className="text-xl font-bold text-white mb-1">Project Tasks</h2>
+          <div className="w-8 h-0.5 bg-pink-500 rounded-full mb-6" />
+        </div>
         <TaskBoard projectId={projectId!} />
       </div>
     </div>

@@ -84,74 +84,70 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] p-4">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#A1BC98] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#778873] rounded-full opacity-20 blur-3xl"></div>
-      </div>
+    <div className="min-h-screen flex items-center justify-center page-bg p-4 relative overflow-hidden">
+      {/* Glow orbs */}
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-600 rounded-full opacity-15 blur-3xl" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-600 rounded-full opacity-12 blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-900 rounded-full opacity-10 blur-3xl" />
 
-      <Card className="w-full max-w-md relative bg-white/90 backdrop-blur-sm border-[#D2DCB6]">
-        <CardHeader className="space-y-1">
+      <Card className="w-full max-w-md relative z-10 border-white/10 shadow-2xl shadow-black/50">
+        <CardHeader className="space-y-1 pb-4">
+          {/* Logo */}
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 bg-[#778873] rounded-lg flex items-center justify-center">
-              <span className="text-2xl font-bold text-[#F1F3E0]">PM</span>
+            <div className="w-14 h-14 bg-blue-500 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/40">
+              <span className="text-2xl font-bold text-white">PM</span>
             </div>
           </div>
-          <CardTitle className="text-2xl text-center text-[#778873]">
-            Welcome
+          <CardTitle className="text-2xl text-center text-white">
+            Welcome back
           </CardTitle>
-          <CardDescription className="text-center text-[#778873]">
+          <CardDescription className="text-center text-white/40">
             Collaborate, manage projects, and reach new productivity peaks
           </CardDescription>
         </CardHeader>
         
         <CardContent>
           <Tabs defaultValue="login" value={activeTab} onValueChange={setActiveTab} className="w-full flex flex-col items-center">
-            <TabsList className="flex mb-6">
-              <TabsTrigger value="login" >Login</TabsTrigger>
-              <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsList className="flex mb-6 w-full">
+              <TabsTrigger value="login" className="flex-1">Login</TabsTrigger>
+              <TabsTrigger value="signup" className="flex-1">Sign Up</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="login">
+            <TabsContent value="login" className="w-full">
               <form onSubmit={handleLogin} className="space-y-4 w-full">
                 <div className="space-y-2">
                   <Label htmlFor="login-email">Email</Label>
-                  <Input id="login-email" type="email" placeholder="name@company.com" value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value as any })} required className="border-[#D2DCB6] focus:border-[#778873] focus:ring-[#778873] min-w-90" />
+                  <Input id="login-email" type="email" placeholder="name@company.com" value={loginData.email} onChange={(e) => setLoginData({ ...loginData, email: e.target.value as any })} required />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">Password</Label>
-                  <Input id="login-password" type="password" placeholder="••••••••" value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value as any })} required className="border-[#D2DCB6] focus:border-[#778873] focus:ring-[#778873] min-w-90" />
+                  <Input id="login-password" type="password" placeholder="••••••••" value={loginData.password} onChange={(e) => setLoginData({ ...loginData, password: e.target.value as any })} required />
                 </div>
-
-                <Button   type="submit"  className="w-full bg-[#778873] hover:bg-[#A1BC98] text-[#F1F3E0]" disabled={isLoading}>
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? 'Logging in...' : 'Login'}
                 </Button>
               </form>
             </TabsContent>
             
-            <TabsContent value="signup">
-              <form onSubmit={handleSignup} className="space-y-4">
+            <TabsContent value="signup" className="w-full">
+              <form onSubmit={handleSignup} className="space-y-4 w-full">
                 <div className="space-y-2">
                   <Label htmlFor="signup-name">Full Name</Label>
-                  <Input id="signup-name"  placeholder="John Doe" value={signupData.name} onChange={(e) => setSignupData({ ...signupData, name: e.target.value as any })} required className="border-[#D2DCB6] focus:border-[#778873] focus:ring-[#778873] min-w-90" />
+                  <Input id="signup-name" placeholder="John Doe" value={signupData.name} onChange={(e) => setSignupData({ ...signupData, name: e.target.value as any })} required />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="signup-email">Email</Label>
-                  <Input id="signup-email" type="email"  placeholder="name@company.com" value={signupData.email} onChange={(e) => setSignupData({ ...signupData, email: e.target.value as any })} required className="border-[#D2DCB6] focus:border-[#778873] focus:ring-[#778873] min-w-90"/>
+                  <Input id="signup-email" type="email" placeholder="name@company.com" value={signupData.email} onChange={(e) => setSignupData({ ...signupData, email: e.target.value as any })} required />
                 </div>
-                
                 <div className="space-y-2">
                   <Label htmlFor="signup-password">Password</Label>
-                  <Input  id="signup-password"  type="password"  placeholder="••••••••"  value={signupData.password}  onChange={(e) => setSignupData({ ...signupData, password: e.target.value as any })}  required className="border-[#D2DCB6] focus:border-[#778873] focus:ring-[#778873]"/>
+                  <Input id="signup-password" type="password" placeholder="••••••••" value={signupData.password} onChange={(e) => setSignupData({ ...signupData, password: e.target.value as any })} required />
                 </div>
-
                 <div className="space-y-2">
                   <Label htmlFor="signup-confirm-password">Confirm Password</Label>
-                  <Input id="signup-confirm-password" type="password"  placeholder="••••••••"  value={signupData.confirmPassword} onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value as any })} required className="border-[#D2DCB6] focus:border-[#778873] focus:ring-[#778873]" />
+                  <Input id="signup-confirm-password" type="password" placeholder="••••••••" value={signupData.confirmPassword} onChange={(e) => setSignupData({ ...signupData, confirmPassword: e.target.value as any })} required />
                 </div>
-                
-                <Button  type="submit" className="w-full bg-[#778873] hover:bg-[#A1BC98] text-[#F1F3E0]" disabled={isLoading} >
+                <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? 'Creating account...' : 'Create Account'}
                 </Button>
               </form>
@@ -160,7 +156,7 @@ export default function AuthPage() {
         </CardContent>
         
         <CardFooter className="flex flex-col space-y-2">
-          <div className="text-sm text-center text-[#778873]">
+          <div className="text-xs text-center text-white/30">
             By continuing, you agree to our Terms of Service and Privacy Policy.
           </div>
         </CardFooter>

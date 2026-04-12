@@ -45,34 +45,34 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute allowedRoles={["ADMIN", "MANAGER"]}>
-    <div className="min-h-screen bg-gradient-to-br from-[#F1F3E0] to-[#D2DCB6] p-6 relative overflow-hidden">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#A1BC98] rounded-full opacity-20 blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#778873] rounded-full opacity-20 blur-3xl"></div>
-      </div>
+    <div className="page-bg relative overflow-hidden">
+      {/* Glow orbs */}
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-700 rounded-full opacity-10 blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-700 rounded-full opacity-8 blur-3xl pointer-events-none" />
 
-      <div className="relative z-10">
-        <h1 className="text-3xl font-bold mb-6 text-[#778873]">
-          Dashboard
-        </h1>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <p className="text-white/40 text-sm font-medium uppercase tracking-widest mb-1">Overview</p>
+          <h1 className="text-3xl font-bold text-white mb-1">
+            Dashboard
+          </h1>
+          <div className="w-12 h-0.5 bg-pink-500 rounded-full" />
+        </div>
 
-        <div className="flex gap-4 mb-6">
-
+        <div className="flex gap-3 mb-8">
           <Button
             onClick={() => setShowModal(true)}
-            className="bg-[#778873] hover:bg-[#A1BC98] text-[#F1F3E0]"
           >
-            Create Project
+            + Create Project
           </Button>
 
           <Button
             onClick={() => router.push("/projects")}
             variant="outline"
-            className="border-[#D2DCB6] text-[#778873] hover:bg-[#D2DCB6]/50"
           >
             View All Projects
           </Button>
-
         </div>
 
         {/* Kanban Board */}
@@ -86,7 +86,6 @@ export default function DashboardPage() {
           />
         )}
       </div>
-
     </div>
     </ProtectedRoute>
   );
