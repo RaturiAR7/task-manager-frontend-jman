@@ -19,6 +19,7 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import { useAuth } from "@/src/context/authContext";
+import { Plus } from "lucide-react";
 
 interface Member {
   id: string;
@@ -63,7 +64,6 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
 
         setTasks(projectTasks);
 
-        // Map project members back to expected format
         const formattedMembers = projectMembers.map((m: any) => ({
           id: m.user.id,
           name: m.user.name,
@@ -87,7 +87,7 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
     const newStatus = over.id as TaskStatus;
 
     if (user?.role === "EMPLOYEE" && newStatus === "TODO") {
-      return; // Employees cannot move tasks to TODO.
+      return;
     }
 
     const task = tasks.find((t) => t.id === taskId);
@@ -148,26 +148,26 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
         <div className="flex justify-end">
           <Dialog open={isDialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
-              <Button className="bg-[#778873] hover:bg-[#A1BC98] text-white">
-                + Create Task
+              <Button className="flex items-center gap-2">
+                <Plus size={16} />
+                Create Task
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] bg-[#0f1629] border border-white/10 text-white shadow-2xl shadow-black/60">
               <DialogHeader>
-                <DialogTitle>Create New Task</DialogTitle>
-                <DialogDescription>
-                  Add a new task to this project and optionally assign it to a
-                  member.
+                <DialogTitle className="text-white text-lg font-semibold">Create New Task</DialogTitle>
+                <DialogDescription className="text-white/40 text-sm">
+                  Add a new task to this project and optionally assign it to a member.
                 </DialogDescription>
               </DialogHeader>
 
               {createError && (
-                <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded px-3 py-2">
+                <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg px-3 py-2">
                   {createError}
                 </div>
               )}
 
-              <div className="grid gap-4 py-4">
+              <div className="grid gap-4 py-2">
                 <div className="grid gap-2">
                   <Label htmlFor="task-title">Title *</Label>
                   <Input
@@ -183,9 +183,7 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="task-description">
-                    Description (optional)
-                  </Label>
+                  <Label htmlFor="task-description">Description (optional)</Label>
                   <Input
                     id="task-description"
                     value={newTask.description}
@@ -206,12 +204,12 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
                       setNewTask({ ...newTask, userId: e.target.value })
                     }
                     disabled={creating}
-                    className="border border-input bg-background rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="flex h-10 w-full rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-white backdrop-blur-sm transition-all focus:outline-none focus:ring-2 focus:ring-pink-400/60 focus:border-pink-400/40 disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{ colorScheme: 'dark' }}
                   >
-                    <option value="">Unassigned</option>
-
+                    <option value="" style={{ background: '#0f1629' }}>Unassigned</option>
                     {members?.map((member) => (
-                      <option key={member.id} value={member.id}>
+                      <option key={member.id} value={member.id} style={{ background: '#0f1629' }}>
                         {member.name}
                         {member.email ? ` (${member.email})` : ""}
                       </option>
@@ -224,7 +222,7 @@ export default function DashboardBoard({ projectId }: DashboardBoardProps) {
                 <Button
                   onClick={handleCreateTask}
                   disabled={creating}
-                  className="bg-[#778873] hover:bg-[#A1BC98] text-white disabled:opacity-50"
+                  className="disabled:opacity-50"
                 >
                   {creating ? "Creating..." : "Save Task"}
                 </Button>
